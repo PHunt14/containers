@@ -15,4 +15,4 @@ Tools:
 
 ## Use
 
-docker run -it node-dev
+docker run --rm -it node-dev
