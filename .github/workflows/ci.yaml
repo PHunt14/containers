@@ -7,11 +7,6 @@ on:
   release:
     types: [published]
 
-env:
-# make sure that this inherits the env vars from the calling job
-  TEST_TAG: ${{ env.registry }}/${{ env.repository }}:test-${{ github.sha }}
-  TAG: ${{ env.registry }}/${{ env.repository }}:${{ github.sha }}
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -36,7 +31,7 @@ jobs:
         with:
           context: infra-dev
           load: true
-          tags: test_${{ github.sha }}}
+          tags: test-${{ github.sha }}}
 
       # - name: Test infra-dev
       #   run: |
@@ -55,7 +50,7 @@ jobs:
         with:
           context: node-dev
           load: true
-          tags: test_${{ github.sha }}}
+          tags: test-${{ github.sha }}}
 
       # - name: Test node-dev
       #   run: |
