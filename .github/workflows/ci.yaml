@@ -50,7 +50,7 @@ jobs:
           push: true
           tags: ${{ github.sha }}
 
-            - name: Build node-dev and export to Docker
+      - name: Build node-dev and export to Docker
         uses: docker/build-push-action@v5
         with:
           context: node-dev
