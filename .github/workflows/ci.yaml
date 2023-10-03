@@ -1,0 +1,70 @@
+# build and tag the docker images
+# https://github.com/marketplace/actions/build-and-push-docker-images
+
+name: Container Image Build & Publish to DockerHub
+
+on:
+  release:
+    types: [published]
+
+env:
+# make sure that this inherits the env vars from the calling job
+  TEST_TAG: ${{ env.registry }}/${{ env.repository }}:test-${{ github.sha }}
+  TAG: ${{ env.registry }}/${{ env.repository }}:${{ github.sha }}
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build infra-dev and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: infra-dev
+          load: true
+          tags: test_${{ github.sha }}}
+
+      # - name: Test infra-dev
+      #   run: |
+      #     docker run --rm ${{ env.TEST_TAG }}
+
+      - name: Build and push infra-dev
+        uses: docker/build-push-action@v5
+        with:
+          context: infra-dev
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ github.sha }}
+
+            - name: Build node-dev and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: node-dev
+          load: true
+          tags: test_${{ github.sha }}}
+
+      # - name: Test node-dev
+      #   run: |
+      #     docker run --rm ${{ env.TEST_TAG }}
+
+      - name: Build and push node-dev
+        uses: docker/build-push-action@v5
+        with:
+          context: node-dev
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ github.sha }}
