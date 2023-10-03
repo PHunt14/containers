@@ -31,7 +31,7 @@ jobs:
         with:
           context: infra-dev
           load: true
-          tags: ${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/infra-dev/${{ github.sha }}
 
       # - name: Test infra-dev
       #   run: |
@@ -43,14 +43,14 @@ jobs:
           context: infra-dev
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/infra-dev/${{ github.sha }}
 
       - name: Build node-dev and export to Docker
         uses: docker/build-push-action@v5
         with:
           context: node-dev
           load: true
-          tags: ${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/node-dev/${{ github.sha }}
 
       # - name: Test node-dev
       #   run: |
@@ -62,4 +62,4 @@ jobs:
           context: node-dev
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/node-dev/${{ github.sha }}
